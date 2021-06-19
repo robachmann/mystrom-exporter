@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mystrom-exporter
+  namespace: mystrom-exporter
+  labels:
+    app: mystrom-exporter
+    exporter: mystrom
+  annotations:
+    alpha.monitoring.coreos.com/non-namespaced: "true"
+spec:
+  selector:
+    app: mystrom-exporter
+  ports:
+    - name: http-metrics
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+
