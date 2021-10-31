@@ -38,3 +38,7 @@ bootBuildImage {
     imageName = "robachmann/${project.name}:${project.version}"
     //builder = "paketobuildpacks/builder:tiny"
 }
+
+wrapper {
+    gradleVersion = '7.2'
+}
