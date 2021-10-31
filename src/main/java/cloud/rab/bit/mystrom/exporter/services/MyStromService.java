@@ -13,6 +13,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,9 +40,19 @@ public class MyStromService {
                 .flatMap(target -> mystromClient.getSwitchData(target.getAddress())
                         .flatMapIterable(response -> {
                             Map<String, String> deviceLabels = Map.of("switchAddress", target.getAddress(), "switchName", target.getAlias());
+
+                            List<Metric> metrics = new ArrayList<>();
                             Metric current = createMetric("mystrom_power_watt", response::getPower, deviceLabels, Map.of("tariffPeriod", tariffPeriod.getLabel()));
+                            metrics.add(current);
                             Metric inverse = createMetric("mystrom_power_watt", () -> 0, deviceLabels, Map.of("tariffPeriod", tariffPeriod.getInverseLabel()));
-                            return List.of(current, inverse);
+                            metrics.add(inverse);
+
+                            if (response.getTemperature() != null) {
+                                Metric temperature = createMetric("mystrom_temperature_celsius", response::getTemperature, deviceLabels, new HashMap<>());
+                                metrics.add(temperature);
+                            }
+
+                            return metrics;
                         }))
                 .collectList();
     }

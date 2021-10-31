@@ -6,5 +6,6 @@ import lombok.Data;
 public class MyStromResponse {
 
     private Double power;
+    private Double temperature;
 
 }
