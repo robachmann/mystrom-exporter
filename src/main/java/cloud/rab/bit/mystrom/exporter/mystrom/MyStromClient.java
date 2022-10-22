@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.time.Duration;
 
 @Slf4j
 @Component
@@ -28,7 +29,13 @@ public class MyStromClient {
                         log.info("SwitchData: {}", clientResponse.statusCode());
                     }
                     return clientResponse.bodyToMono(MyStromResponse.class);
-                });
+                })
+                .timeout(Duration.ofSeconds(5), this.logTimeout());
+    }
+
+    private Mono<MyStromResponse> logTimeout() {
+        return Mono.fromRunnable(() -> log.info("Timeout reached. Returning empty response.")).then(Mono.empty());
+
     }
 
 }
