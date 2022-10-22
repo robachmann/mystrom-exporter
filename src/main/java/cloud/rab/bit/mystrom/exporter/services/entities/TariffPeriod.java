@@ -6,23 +6,17 @@ public enum TariffPeriod {
     peak;
 
     public String getLabel() {
-        switch (this) {
-            case offPeak:
-                return "off-peak";
-            case peak:
-                return "peak";
-        }
-        return "invalid";
+        return switch (this) {
+            case offPeak -> "off-peak";
+            case peak -> "peak";
+        };
     }
 
     public String getInverseLabel() {
-        switch (this) {
-            case offPeak:
-                return "peak";
-            case peak:
-                return "off-peak";
-        }
-        return "invalid";
+        return switch (this) {
+            case offPeak -> "peak";
+            case peak -> "off-peak";
+        };
     }
 
 }
